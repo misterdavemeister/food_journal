@@ -15,6 +15,7 @@
 					journal = JSON.parse(localStorage.journal);
 					journal.today = date;
 					journal.entries ?  showEntries() : makeEntry();
+					//starts new entries object on load, if one has not been made and populated
 					if (lastDateShown && journal.today != lastDateShown) makeEntry(); // lastDateShown is not defined until "showEntries()" sets it to the last entry's date. this if statement and the makeEntry() call updates the date for the new entries
 				} catch(e) {
 					console.log(e);
@@ -27,8 +28,8 @@
 				$(".checkbox>input").click(function() {
 					var dateOfCheckbox = $(this).parent().parent().attr('id');
 					var val = $(this).attr("value");
+					journal.entries[dateOfCheckbox] = journal.entries[dateOfCheckbox] || {};
 					journal.entries[dateOfCheckbox].checkbox = journal.entries[dateOfCheckbox].checkbox || {};
-					//TODO: above line may be unnecessary if set up in "make entry" function 
 				    if($(this).is(":checked")) // "this" refers to the checkbox element that fired the event
 				    {
 						journal.entries[dateOfCheckbox].checkbox[val] = true;
@@ -36,6 +37,9 @@
 				    }
 					else {
 						delete journal.entries[dateOfCheckbox].checkbox[val];
+						if ($.isEmptyObject(journal.entries[dateOfCheckbox].checkbox)) delete journal.entries[dateOfCheckbox].checkbox;
+						if ($.isEmptyObject(journal.entries[dateOfCheckbox])) delete journal.entries[dateOfCheckbox];
+						if ($.isEmptyObject(journal.entries)) delete journal.entries;
 						save(journal);
 					}
 				});
