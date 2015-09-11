@@ -1,0 +1,58 @@
+h2 {
+	position: relative;
+	display: inline-block;
+	top: 0;
+}
+
+.checkbox {
+	display: inline-block;
+	position: relative;
+	margin: 10px;
+}
+
+.checkbox > input {
+	display: inline-block;
+}
+
+.entry{
+	position: relative;
+	border: 2px solid black;
+	margin: 20px auto;
+	background: #999;
+}
+
+.date {
+	position: relative;
+	display: inline-block;
+	margin-left: 40px;
+	width: 200px;
+}
+
+.food-label {
+	width: 40%;
+	left: 40px;
+}
+
+.symptom-label {
+	width: 40%;
+	left: 40px;
+}
+
+#all_entry_wrapper {
+	position: relative;
+}
+
+#food_entry_wrapper {
+	display: inline-block;
+	vertical-align: top;
+	width: 40%;
+	height: 100%;
+	position: relative;
+}
+
+#symptom_entry_wrapper {
+	display: inline-block;
+	vertical-align: top;
+	width: 40%;
+	position: relative;
+}

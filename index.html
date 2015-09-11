@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Food Journal</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+		<script type="text/javascript" src="script.js"></script>
+		<script type="text/javascript" src="jquery.js"></script>
+		<script>
+		var journal = {}, date = getDate(), lastDateShown;
+			$(document).ready(function() {
+				try {
+					//Journal object created from localStorage if exists
+					//if journal.entries exist, show the entries
+					//else make an empty entry to populate
+					journal = JSON.parse(localStorage.journal);
+					journal.today = date;
+					journal.entries ?  showEntries() : makeEntry();
+					if (lastDateShown && journal.today != lastDateShown) makeEntry(); // lastDateShown is not defined until "showEntries()" sets it to the last entry's date. this if statement and the makeEntry() call updates the date for the new entries
+				} catch(e) {
+					console.log(e);
+					journal.today = date;
+					save(journal);
+					makeEntry();
+				}
+				
+				//checkbox onclick handler, used to update journal object and save its state
+				$(".checkbox>input").click(function() {
+					var dateOfCheckbox = $(this).parent().parent().attr('id');
+					var val = $(this).attr("value");
+					journal.entries[dateOfCheckbox].checkbox = journal.entries[dateOfCheckbox].checkbox || {};
+					//TODO: above line may be unnecessary if set up in "make entry" function 
+				    if($(this).is(":checked")) // "this" refers to the checkbox element that fired the event
+				    {
+						journal.entries[dateOfCheckbox].checkbox[val] = true;
+						save(journal);
+				    }
+					else {
+						delete journal.entries[dateOfCheckbox].checkbox[val];
+						save(journal);
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="form">
+				<form>
+					Food/Drink/Whatever consumed (one item at a time):<br/>
+					<input type="text" id="food_items" size="100" onkeydown="keyPress(event, this.id, addFood);"/><br/>
+					<input type="button" value="Add Food" onclick="addFood('food_items');"/>
+					<br/>
+					Symptoms (physical, emotional) (one item at a time):<br/>
+					<input type="text" id="symptoms" size="100" onkeydown="keyPress(event, this.id, addSymptom);"><br/>
+					<input type="button" value="Add Symptom" onclick="addSymptom('symptoms');"/>
+					<br/>
+				</form>
+			</div>
+			<hr/>
+			<div id="entries">
+			</div>
+		</div>
+	</body>
+</html>
