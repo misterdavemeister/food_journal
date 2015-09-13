@@ -9,15 +9,15 @@ function showEntries() {
 	for (var p in journal.entries) {
 		makeEntry(p);
 		if (journal.entries[p].food) {
-			var foodEntries = journal.entries[p].food.split("<new-entry>");
+			var foodEntries = journal.entries[p].food;
 			for (var i = 0; i < foodEntries.length; i++) {
-				$("#food_entries").append("<li class='food_entry'>"+foodEntries[i]+"</li>");
+				$("#food_entries").prepend("<li class='food_entry' id='"+p.replace(/\//g, '')+i+"food"+"' onclick='editEntry(this.id);'>"+foodEntries[i]+"</li>");
 			}
 		}
 		if (journal.entries[p].symptoms) {
-			var symptomEntries = journal.entries[p].symptoms.split("<new-entry>");
+			var symptomEntries = journal.entries[p].symptoms;
 			for (var i = 0; i < symptomEntries.length; i++) {
-				$("#symptom_entries").append("<li class='symptom_entry'>"+symptomEntries[i]+"</li>");
+				$("#symptom_entries").prepend("<li class='symptom_entry' id='"+p.replace(/\//g, '')+i+"symptom"+"' onclick='editEntry(this.id);'>"+symptomEntries[i]+"</li>");
 			}
 		}
 		//checkbox setup
@@ -39,7 +39,12 @@ function showEntries() {
 	}	
 }
 
-function editEntry(date) {
+function editEntry(id) {
+	//temporary: 
+	//TODO: DELETE THIS:
+		console.log(id);
+		if (confirm("Delete this item? ("+id+")"))
+			$('#'+id).fadeOut('slow');
 	/*TODO: 
 	concept, maybe: 
 				    if($(this).is(":checked")) // "this" refers to the checkbox element that fired the event
@@ -71,7 +76,7 @@ function addFood(foodElement) {
 	}
 	journal.entries = journal.entries || {};
 	journal.entries[date] = journal.entries[date] || {};
-	journal.entries[date].food ? journal.entries[date].food +='<new-entry>'+entry : journal.entries[date].food = entry; 
+	journal.entries[date].food ? journal.entries[date].food.push(entry) : (journal.entries[date].food = [], journal.entries[date].food.push(entry)); 
 	save(journal);
 }
 
@@ -89,8 +94,7 @@ function addSymptom(symptomElement) {
 	}
 	journal.entries = journal.entries || {};
 	journal.entries[date] = journal.entries[date] || {};
-	journal.entries[date].symptoms ? journal.entries[date].symptoms +='<new-entry>'+entry : journal.entries[date].symptoms = entry;
-	save(journal);
+	journal.entries[date].symptoms ? journal.entries[date].symptoms.push(entry) : (journal.entries[date].symptoms = [], journal.entries[date].symptoms.push(entry)); 	save(journal);
 }
 
 function getDate() {
